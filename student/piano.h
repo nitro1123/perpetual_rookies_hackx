@@ -1,5 +1,6 @@
 #ifndef PIANO_H
 #define PAINO_H
+#include <inttypes.h>
 void beginPiano();
-void printKeys(unsigned long keys);
+void printKeys(uint64_t keys);
 #endif

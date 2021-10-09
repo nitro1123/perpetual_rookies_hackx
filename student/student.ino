@@ -2,7 +2,8 @@
 #include "wifi.h"
 #include "webClient.h"
 #include "piano.h"
-#include <Arduino_JSON.h>
+#define ARDUINOJSON_USE_LONG_LONG 1
+#include <ArduinoJson.h>
 
 
 #define WIFI_SSID "Nitro_net"
@@ -23,6 +24,7 @@ void setup() {
 void loop() {
   if(!wifiConnected()){
     Serial.println("WiFi not connected");
+    delay(5000);
     return;
   }
   if(nextUpdateTime>millis()){
@@ -38,14 +40,18 @@ void loop() {
     Serial.println(wClient.error);
     return;
   }
+  DynamicJsonDocument doc(1024);
+  deserializeJson(doc, wClient.responseBody);
   
-  JSONVar myObject = JSON.parse(wClient.responseBody.c_str());
-  if(!myObject.hasOwnProperty("keys")){
-    Serial.print("The response was ");
-    Serial.print(wClient.responseBody);
-    Serial.println(" Did not receive keys value");
-    return;
+  JsonObject myObject= doc.as<JsonObject>();
+  String keyString = myObject["keys"].as<String>();
+  if(keyString == ""){
+    Serial.println("Did not receive key data in response");
   }
-  long Keys = (long)myObject["keys"];
+  uint64_t Keys=0;
+  for(int i=0;i<keyString.length();i++){
+    Keys*=10;
+    Keys+=(keyString[i]-'0');
+  }
   printKeys(Keys);
 }

@@ -57,11 +57,13 @@ MD_MAX72XX mx = MD_MAX72XX(HARDWARE_TYPE, DATA_PIN, CLK_PIN, CS_PIN, MAX_DEVICES
 
 
 
-void printKeys(unsigned long keys){
+void printKeys(uint64_t keysData){
   mx.control(MD_MAX72XX::UPDATE, MD_MAX72XX::OFF);
-  for(int i=0;i<37;i++){
+  for(uint64_t i=0;i<37;i++){
     keyData[i]>>=1;
-    if(keys&(1<<i)){
+    uint64_t mask = 1;
+    mask<<=i;
+    if(keysData&mask){
       keyData[i]|=0x80;
     }
     for(int j=keyLocations[i][0];j<=keyLocations[i][1];j++){
