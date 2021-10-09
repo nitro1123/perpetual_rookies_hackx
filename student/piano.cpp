@@ -11,9 +11,9 @@ using namespace std;
 #define CS_PIN    D4  // or SS
 #define MAX_DEVICES 12
 
-vector<int> dData(37, 0);
+vector<int> keyData(37, 0);
 
-int columns[37][2] = {
+int keyLocations[37][2] = {
   {4,5},
   {7,7},
   {8,9},
@@ -60,13 +60,13 @@ MD_MAX72XX mx = MD_MAX72XX(HARDWARE_TYPE, DATA_PIN, CLK_PIN, CS_PIN, MAX_DEVICES
 void printKeys(unsigned long keys){
   mx.control(MD_MAX72XX::UPDATE, MD_MAX72XX::OFF);
   for(int i=0;i<37;i++){
-    dData[i]>>=1;
+    keyData[i]>>=1;
     if(keys&(1<<i)){
-      dData[i]|=0x80;
+      keyData[i]|=0x80;
     }
-    for(int j=columns[i][0];j<=columns[i][1];j++){
+    for(int j=keyLocations[i][0];j<=keyLocations[i][1];j++){
       int r_col=(j&0xFFF8)|(7-(j&0x07));
-      mx.setColumn(r_col,dData[i]);
+      mx.setColumn(r_col,keyData[i]);
     }
   }
   mx.control(MD_MAX72XX::UPDATE, MD_MAX72XX::ON);

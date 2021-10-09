@@ -10,6 +10,8 @@
 
 #define GET_KEYS_URL "http://192.168.2.5:1923/keys"
 
+unsigned long nextUpdateTime = millis();
+
 void setup() {
   Serial.begin(115200);
   beingWiFi(WIFI_SSID, WIFI_PASSWORD);
@@ -19,11 +21,14 @@ void setup() {
 }
 
 void loop() {
-  delay(100);
   if(!wifiConnected()){
     Serial.println("WiFi not connected");
     return;
   }
+  if(nextUpdateTime>millis()){
+    return;
+  }
+  nextUpdateTime=millis()+100;
   WebClient wClient;
   int code=wClient.Get(GET_KEYS_URL);
   if( code!=200){
