@@ -8,6 +8,7 @@ int WebClient::Post(String url, String postBody){
     this->error="Unable to connect";
     return 0;
   }
+  this->http.addHeader("Content-Type", "application/json");
   int httpCode = this->http.POST(postBody);
   if(httpCode>0){
     this->responseBody= http.getString();
