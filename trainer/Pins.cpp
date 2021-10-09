@@ -9,7 +9,7 @@ vector<int> valueArray{7,9,11,12,14,16,18};
 
 void initiatePins(){
   for(int i=0;i<pinArray.size();i++){
-    pinMode(pinArray[i],INPUT_PULLUP);
+    pinMode(pinArray[i],INPUT);
   }
 }
 uint64_t getKeys(){
