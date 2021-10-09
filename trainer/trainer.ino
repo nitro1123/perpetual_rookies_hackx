@@ -1,24 +1,29 @@
-const int led = 5;
-const int button = 16;
-int temp = 0;
+int pinArray[]={16, 5, 4, 0, 10};
+
+#define pins 5
 
 void setup() {
-  Serial.begin(9600);
-  pinMode(led, OUTPUT);
-  pinMode(button, INPUT);
+  Serial.begin(115200);
+  Serial.println("Size of pinArray is :");
+  for(int i=0;i<pins;i++){
+    pinMode(pinArray[i],INPUT_PULLUP);
+  }
+  Serial.println("Starting loop");
 }
 
+int prevOutput=0;
+
 void loop() {
-  temp = digitalRead(button);
-     
-     if (temp == HIGH) {
-        digitalWrite(led, HIGH);
-        Serial.println("LED Turned ON");
-        //delay(100);
-       }
-     else {
-        digitalWrite(led, LOW);
-        Serial.println("LED Turned OFF");
-        //delay(1000);
-       }
+  int op=0;
+  for(int i=0;i<pins;i++){
+    if(!digitalRead(pinArray[i]))
+    {
+      op|=1<<i;
+    }
+  }
+  if(op!=prevOutput){
+    Serial.print("Changed to ");
+    Serial.println(op);
+    prevOutput=op;
+  }
 }
